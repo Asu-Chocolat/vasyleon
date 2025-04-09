@@ -4,9 +4,7 @@
     "strict": true,
     "paths": {
       "@/*": ["./*"]
-    },
-    "module" : "Node16",
-    "moduleResolution": "node16"
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

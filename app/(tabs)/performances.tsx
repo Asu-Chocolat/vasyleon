@@ -1,25 +1,30 @@
-import { Image, StyleSheet, Platform, Text } from "react-native";
+import { StyleSheet, Image, Platform } from "react-native";
+
+import { Collapsible } from "@/components/Collapsible";
+import { ExternalLink } from "@/components/ExternalLink";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
-export default function HomeScreen() {
+export default function PerformancesScreen() {
   return (
     <ParallaxScrollView
       headerImage={
-        <Image
-          source={require("@/assets/images/logo.png")}
+        <IconSymbol
+          size={310}
+          color="#808080"
+          name="chevron.left.forwardslash.chevron.right"
           style={styles.headerImage}
         />
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Index</ThemedText>
+        <ThemedText type="title">Profil</ThemedText>
       </ThemedView>
-      // contenu
-
+      <ThemedText>
+        This app includes example code to help you get started.
+      </ThemedText>
       <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{" "}
@@ -63,6 +68,17 @@ export default function HomeScreen() {
           <ThemedText type="link">Learn more</ThemedText>
         </ExternalLink>
       </Collapsible>
+      <Collapsible title="Light and dark mode components">
+        <ThemedText>
+          This template has light and dark mode support. The{" "}
+          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook
+          lets you inspect what the user's current color scheme is, and so you
+          can adjust UI colors accordingly.
+        </ThemedText>
+        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
+          <ThemedText type="link">Learn more</ThemedText>
+        </ExternalLink>
+      </Collapsible>
       <Collapsible title="Animations">
         <ThemedText>
           This template includes an example of an animated component. The{" "}
@@ -93,8 +109,10 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   headerImage: {
-    width: 200,
-    resizeMode: "contain",
+    color: "#808080",
+    bottom: -90,
+    left: -35,
+    position: "absolute",
   },
   titleContainer: {
     flexDirection: "row",
