@@ -10,6 +10,7 @@ C'est un projet [Expo](https://expo.dev) créé avec [`create-expo-app`](https:/
    npm install
    ```
 
+
 2. Puis démarrez l'application :
 
    ```bash
