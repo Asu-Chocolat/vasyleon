@@ -30,19 +30,19 @@ export default function RootLayout() {
 
         {/* Écrans hors onglets */}
         <Stack.Screen
-          name="performances/form"
+          name="(stack)/performances/form"
           options={{ title: "Ajouter une performance", headerShown: true }}
         />
         <Stack.Screen
-          name="performances/[id]"
+          name="(stack)/performances/[id]"
           options={{ title: "Détails de la performance", headerShown: true }}
         />
         <Stack.Screen
-          name="performances/confirmation"
+          name="(stack)/performances/confirmation"
           options={{ title: "Confirmation", headerShown: true }}
         />
         <Stack.Screen
-          name="entrainements/form"
+          name="(stack)/entrainements/form"
           options={{ title: "Ajouter un entraînement", headerShown: true }}
         />
       </Stack>
