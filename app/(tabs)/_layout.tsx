@@ -17,11 +17,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Image
               source={require("@/assets/images/home.png")}
-              style={{
-                width: size,
-                height: size,
-                tintColor: color,
-              }}
+              style={{ width: size, height: size }}
+              tintColor={color} // Utilisation correcte de tintColor
             />
           ),
         }}
@@ -33,11 +30,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Image
               source={require("@/assets/images/performances.png")}
-              style={{
-                width: size,
-                height: size,
-                tintColor: color,
-              }}
+              style={{ width: size, height: size }}
+              tintColor={color} // Utilisation correcte de tintColor
             />
           ),
         }}
@@ -49,11 +43,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Image
               source={require("@/assets/images/conseils.png")}
-              style={{
-                width: size,
-                height: size,
-                tintColor: color,
-              }}
+              style={{ width: size, height: size }}
+              tintColor={color} // Utilisation correcte de tintColor
             />
           ),
         }}
@@ -65,11 +56,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Image
               source={require("@/assets/images/entrainements.png")}
-              style={{
-                width: size,
-                height: size,
-                tintColor: color,
-              }}
+              style={{ width: size, height: size }}
+              tintColor={color} // Utilisation correcte de tintColor
             />
           ),
         }}
