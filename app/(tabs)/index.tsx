@@ -1,13 +1,21 @@
-import { Image, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, StyleSheet, Platform, Text } from "react-native";
-import { SvgXml } from 'react-native-svg';
+import {
+  Image,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Platform,
+  Text,
+} from "react-native";
+import { SvgXml } from "react-native-svg";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Collapsible } from "@/components/Collapsible";
 import { ExternalLink } from "@/components/ExternalLink";
-
-import { useLeonNavigation } from '@/hooks/navigation';
-const { home, conseils, performances, entrainements } = useLeonNavigation();
+import { useLeonNavigation } from "@/hooks/navigation";
 
 const logoSvg = `
 <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
@@ -28,13 +36,13 @@ const arrowIconSvg = `
 </svg>
 `;
 
-
 export default function HomeScreen() {
-
+  const { performanceForm, conseils, performances, entrainements } =
+    useLeonNavigation();
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
+
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.titleContainer}>
@@ -46,11 +54,14 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Add Performance Button */}
-        <TouchableOpacity 
-          style={styles.addButton} 
-          onPress={performances}
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={performanceForm}
           activeOpacity={0.8}
         >
           <Text style={styles.addButtonText}>AJOUTER UN NOUVEAU TEMPS</Text>
@@ -58,18 +69,20 @@ export default function HomeScreen() {
 
         {/* Performances Section */}
         <View style={styles.section}>
-          <TouchableOpacity 
-            style={styles.sectionHeader} 
+          <TouchableOpacity
+            style={styles.sectionHeader}
             onPress={performances}
             activeOpacity={0.6}
           >
             <Text style={styles.sectionTitle}>Performances</Text>
             <SvgXml xml={arrowIconSvg} width={20} height={20} />
           </TouchableOpacity>
-          
+
           {/* Performance Card 1 */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Régionale - Cholet (07/04/2025)</Text>
+            <Text style={styles.cardTitle}>
+              Régionale - Cholet (07/04/2025)
+            </Text>
             <View style={styles.performanceRow}>
               <Text style={styles.performanceLabel}>100m Brasse: </Text>
               <Text style={styles.performanceValue}>1:18.35</Text>
@@ -82,10 +95,12 @@ export default function HomeScreen() {
               <Text style={styles.performanceValue}>0:34.76</Text>
             </View>
           </View>
-          
+
           {/* Performance Card 2 */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Interrégionale - Nantes (12/03/2025)</Text>
+            <Text style={styles.cardTitle}>
+              Interrégionale - Nantes (12/03/2025)
+            </Text>
             <View style={styles.performanceRow}>
               <Text style={styles.performanceLabel}>50m Nage Libre: </Text>
               <Text style={styles.performanceValue}>0:27.41</Text>
@@ -95,41 +110,47 @@ export default function HomeScreen() {
 
         {/* Advices Section */}
         <View style={styles.section}>
-          <TouchableOpacity 
-            style={styles.sectionHeader} 
+          <TouchableOpacity
+            style={styles.sectionHeader}
             onPress={conseils}
             activeOpacity={0.6}
           >
             <Text style={styles.sectionTitle}>Derniers conseils</Text>
             <SvgXml xml={arrowIconSvg} width={20} height={20} />
           </TouchableOpacity>
-          
+
           {/* Advice Card 1 */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>07/04/2025</Text>
-            <Text style={styles.adviceText}>1 conseil du coach - "Brasse..."</Text>
-            <Text style={styles.adviceText}>1 note personnelle - "J'étais un peu stressé..."</Text>
+            <Text style={styles.adviceText}>
+              1 conseil du coach - "Brasse..."
+            </Text>
+            <Text style={styles.adviceText}>
+              1 note personnelle - "J'étais un peu stressé..."
+            </Text>
           </View>
-          
+
           {/* Advice Card 2 */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>01/03/2025</Text>
-            <Text style={styles.adviceText}>1 conseil du coach - "Brasse..."</Text>
+            <Text style={styles.adviceText}>
+              1 conseil du coach - "Brasse..."
+            </Text>
             <Text style={styles.adviceText}>Pas de note personnelle</Text>
           </View>
         </View>
 
         {/* Trainings Section */}
         <View style={styles.section}>
-          <TouchableOpacity 
-            style={styles.sectionHeader} 
+          <TouchableOpacity
+            style={styles.sectionHeader}
             onPress={entrainements}
             activeOpacity={0.6}
           >
             <Text style={styles.sectionTitle}>Derniers entraînements</Text>
             <SvgXml xml={arrowIconSvg} width={20} height={20} />
           </TouchableOpacity>
-          
+
           {/* Training Card 1 */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Course à pied (07/04/2025)</Text>
@@ -140,7 +161,7 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
-          
+
           {/* Training Card 2 */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Musculation (01/04/2025)</Text>
@@ -152,7 +173,7 @@ export default function HomeScreen() {
             </View>
           </View>
         </View>
-        
+
         {/* Space at the bottom for navigation bar */}
         <View style={styles.bottomSpace} />
       </ScrollView>
@@ -167,21 +188,21 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flexDirection: "row",
-    alignItems: 'center',
+    alignItems: "center",
     gap: 8,
   },
   safeArea: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: "#F8F8F8",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -189,65 +210,65 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
-    color: '#0D3C5F',
+    fontWeight: "bold",
+    color: "#0D3C5F",
     marginLeft: 8,
   },
   profileButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 16,
     width: 40,
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: '#0D3C5F',
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: "#0D3C5F",
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
   },
   scrollView: {
     flex: 1,
     paddingHorizontal: 16,
   },
   addButton: {
-    backgroundColor: '#000000',
+    backgroundColor: "#000000",
     borderRadius: 8,
     paddingVertical: 16,
     marginTop: 16,
     marginBottom: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },
   addButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   section: {
     marginBottom: 24,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#0D3C5F',
+    fontWeight: "bold",
+    color: "#0D3C5F",
     marginRight: 4,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -255,80 +276,80 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333333',
+    fontWeight: "bold",
+    color: "#333333",
     marginBottom: 8,
   },
   performanceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginVertical: 4,
   },
   performanceLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#0D3C5F',
+    fontWeight: "600",
+    color: "#0D3C5F",
   },
   performanceValue: {
     fontSize: 14,
-    color: '#333333',
+    color: "#333333",
     marginLeft: 4,
   },
   qualifiedBadge: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: "#E8F5E9",
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 12,
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
   qualifiedText: {
     fontSize: 12,
-    color: '#2E7D32',
-    fontWeight: '500',
+    color: "#2E7D32",
+    fontWeight: "500",
   },
   adviceText: {
     fontSize: 14,
-    color: '#333333',
+    color: "#333333",
     marginVertical: 2,
   },
   trainingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 8,
   },
   trainingTime: {
     fontSize: 14,
-    color: '#333333',
+    color: "#333333",
     marginRight: 8,
   },
   intensityBadgeMedium: {
-    backgroundColor: '#FFF8E1',
+    backgroundColor: "#FFF8E1",
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 12,
   },
   intensityBadgeHigh: {
-    backgroundColor: '#FFEBEE',
+    backgroundColor: "#FFEBEE",
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 12,
   },
   intensityText: {
     fontSize: 12,
-    fontWeight: '500',
-    color: '#BF360C',
+    fontWeight: "500",
+    color: "#BF360C",
   },
   bottomSpace: {
     height: 20,
   },
   navBar: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    paddingBottom: Platform.OS === 'ios' ? 20 : 8,
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
+    paddingBottom: Platform.OS === "ios" ? 20 : 8,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
-    shadowColor: '#000',
+    borderTopColor: "#E0E0E0",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -336,18 +357,18 @@ const styles = StyleSheet.create({
   },
   navItem: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   navItemText: {
     fontSize: 12,
     marginTop: 4,
-    color: '#8E8E93',
+    color: "#8E8E93",
   },
   navItemTextActive: {
     fontSize: 12,
     marginTop: 4,
-    color: '#0D3C5F',
-    fontWeight: '500',
+    color: "#0D3C5F",
+    fontWeight: "500",
   },
 });

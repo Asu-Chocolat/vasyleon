@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useRouter } from "expo-router";
-import { useColorScheme } from "@/hooks/useColorScheme";
 
 // SVG Icons
 const logoSvg = `
@@ -68,7 +67,6 @@ interface TrainingItem {
 }
 
 export default function EntrainementsScreen() {
-  const colorScheme = useColorScheme();
   const router = useRouter();
 
   const goToEntrainements = () => {

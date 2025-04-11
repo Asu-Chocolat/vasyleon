@@ -8,6 +8,7 @@ export const useLeonNavigation = () => {
     home: () => router.push('/'),
     conseils: () => router.push('/conseils'),
     performances: () => router.push('/performances'),
-    entrainements: () => router.push('/entrainements')
+    entrainements: () => router.push('/entrainements'),
+		performanceForm: () => router.push('/performances/form')
   };
 };

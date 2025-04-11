@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,11 +11,9 @@ import {
   Image,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { useRoute, ParamListBase, RouteProp } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase/config";
 
 // SVG Icons
 const logoSvg = `
@@ -51,10 +49,27 @@ const chevronRightIconSvg = `
 `;
 
 export default function PerformancesScreen() {
-  const colorScheme = useColorScheme();
   const router = useRouter();
+  const [performances, setPerformances] = useState<any[]>([]);
 
-  const goToPerformances = () => {
+  const fetchPerformances = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "performances"));
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setPerformances(data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des performances :", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPerformances();
+  }, []);
+
+  const goToPerformancesForm = () => {
     router.push("/performances/form");
   };
 
@@ -99,183 +114,46 @@ export default function PerformancesScreen() {
         {/* Add Performance Button */}
         <TouchableOpacity
           style={styles.addButton}
-          onPress={goToPerformances}
+          onPress={goToPerformancesForm}
           activeOpacity={0.8}
         >
           <Text style={styles.addButtonText}>AJOUTER UN NOUVEAU TEMPS</Text>
         </TouchableOpacity>
 
-        {/* Competitions List */}
+        {/* Liste des performances */}
         <View style={styles.competitionsContainer}>
-          {/* Competition 1 - Expanded by default */}
-          <View style={styles.competitionCard}>
-            <View style={styles.competitionContent}>
-              <Text style={styles.competitionTitle}>Régionale - Cholet</Text>
-              <Text style={styles.competitionDate}>07/04/2025</Text>
-
-              <View style={styles.competitionStats}>
-                <Text style={styles.statText}>3 performances enregistrées</Text>
-                <Text style={styles.statText}>
-                  1 temps qualificatif atteint
+          {performances.map((performance) => (
+            <View key={performance.id} style={styles.competitionCard}>
+              <View style={styles.competitionContent}>
+                <Text style={styles.competitionTitle}>
+                  {performance.eventType} - {performance.location}
                 </Text>
-              </View>
+                <Text style={styles.competitionDate}>{performance.date}</Text>
 
-              {expandedCompetition === "reg-cholet" && (
-                <View style={styles.performancesList}>
-                  <View style={styles.performanceItem}>
-                    <Text style={styles.performanceText}>
-                      100m brasse - bassin 50m - 1:18:35
-                    </Text>
-                    <SvgXml
-                      xml={checkIconSvg}
-                      width={16}
-                      height={16}
-                      color="#22C55E"
-                    />
+                <View style={styles.competitionStats}>
+                  <Text style={styles.statText}>
+                    Style : {performance.swimStyle}
+                  </Text>
+                  <Text style={styles.statText}>
+                    Distance : {performance.distance}m - Bassin :{" "}
+                    {performance.poolLength}
+                  </Text>
+                  <Text style={styles.statText}>
+                    Temps : {performance.time.minutes}:
+                    {performance.time.seconds.toString().padStart(2, "0")}:
+                    {performance.time.centiseconds.toString().padStart(2, "0")}
+                  </Text>
+                </View>
+
+                {performance.notes && (
+                  <View style={styles.notesContainer}>
+                    <Text style={styles.notesTitle}>Notes :</Text>
+                    <Text style={styles.notesText}>{performance.notes}</Text>
                   </View>
-                  <View style={styles.performanceItem}>
-                    <Text style={styles.performanceText}>
-                      50m brasse - bassin 50m - 0:38:725
-                    </Text>
-                  </View>
-                  <View style={styles.performanceItem}>
-                    <Text style={styles.performanceText}>
-                      50m dos - bassin 50m - 0:40:377
-                    </Text>
-                  </View>
-                </View>
-              )}
-            </View>
-            <TouchableOpacity
-              style={styles.expandButton}
-              onPress={() => toggleCompetition("reg-cholet")}
-            >
-              <SvgXml
-                xml={
-                  expandedCompetition === "reg-cholet"
-                    ? chevronDownIconSvg
-                    : chevronRightIconSvg
-                }
-                width={20}
-                height={20}
-                color="#9CA3AF"
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Competition 2 */}
-          <View style={styles.competitionCard}>
-            <View style={styles.competitionContent}>
-              <Text style={styles.competitionTitle}>
-                Interrégionale - Nantes
-              </Text>
-              <Text style={styles.competitionDate}>12/03/2025</Text>
-
-              <View style={styles.competitionStats}>
-                <Text style={styles.statText}>5 performances enregistrées</Text>
-                <Text style={styles.statText}>
-                  2 temps qualificatifs atteints
-                </Text>
+                )}
               </View>
-
-              {expandedCompetition === "interreg-nantes" && (
-                <View style={styles.performancesList}>
-                  {/* Performance items would be here */}
-                </View>
-              )}
             </View>
-            <TouchableOpacity
-              style={styles.expandButton}
-              onPress={() => toggleCompetition("interreg-nantes")}
-            >
-              <SvgXml
-                xml={
-                  expandedCompetition === "interreg-nantes"
-                    ? chevronDownIconSvg
-                    : chevronRightIconSvg
-                }
-                width={20}
-                height={20}
-                color="#9CA3AF"
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Competition 3 */}
-          <View style={styles.competitionCard}>
-            <View style={styles.competitionContent}>
-              <Text style={styles.competitionTitle}>
-                Entraînement chronométré - Club
-              </Text>
-              <Text style={styles.competitionDate}>01/03/2025</Text>
-
-              <View style={styles.competitionStats}>
-                <Text style={styles.statText}>2 performances enregistrées</Text>
-                <Text style={styles.statText}>
-                  0 temps qualificatif atteint
-                </Text>
-              </View>
-
-              {expandedCompetition === "entrainement-club" && (
-                <View style={styles.performancesList}>
-                  {/* Performance items would be here */}
-                </View>
-              )}
-            </View>
-            <TouchableOpacity
-              style={styles.expandButton}
-              onPress={() => toggleCompetition("entrainement-club")}
-            >
-              <SvgXml
-                xml={
-                  expandedCompetition === "entrainement-club"
-                    ? chevronDownIconSvg
-                    : chevronRightIconSvg
-                }
-                width={20}
-                height={20}
-                color="#9CA3AF"
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Competition 4 */}
-          <View style={styles.competitionCard}>
-            <View style={styles.competitionContent}>
-              <Text style={styles.competitionTitle}>
-                Départementale - Angers
-              </Text>
-              <Text style={styles.competitionDate}>22/01/2025</Text>
-
-              <View style={styles.competitionStats}>
-                <Text style={styles.statText}>4 performances enregistrées</Text>
-                <Text style={styles.statText}>
-                  1 temps qualificatif atteint
-                </Text>
-              </View>
-
-              {expandedCompetition === "dep-angers" && (
-                <View style={styles.performancesList}>
-                  {/* Performance items would be here */}
-                </View>
-              )}
-            </View>
-            <TouchableOpacity
-              style={styles.expandButton}
-              onPress={() => toggleCompetition("dep-angers")}
-            >
-              <SvgXml
-                xml={
-                  expandedCompetition === "dep-angers"
-                    ? chevronDownIconSvg
-                    : chevronRightIconSvg
-                }
-                width={20}
-                height={20}
-                color="#9CA3AF"
-              />
-            </TouchableOpacity>
-          </View>
+          ))}
         </View>
 
         {/* Space at the bottom for navigation bar */}
@@ -404,5 +282,21 @@ const styles = StyleSheet.create({
   },
   bottomSpace: {
     height: 20,
+  },
+  notesContainer: {
+    marginTop: 12,
+    padding: 8,
+    backgroundColor: "#F9FAFB",
+    borderRadius: 6,
+  },
+  notesTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#0D3C5F",
+    marginBottom: 4,
+  },
+  notesText: {
+    fontSize: 14,
+    color: "#4B5563",
   },
 });

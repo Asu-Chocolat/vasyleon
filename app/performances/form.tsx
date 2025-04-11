@@ -13,7 +13,7 @@ import {
   Animated,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { router } from "expo-router";
+import { router, useRootNavigationState } from "expo-router";
 // import  from @/models/performance;
 import { db } from "@/firebase/config";
 import { collection, addDoc } from "firebase/firestore";
@@ -52,9 +52,6 @@ const minusIconSvg = `
 `;
 
 export default function AddPerformanceScreen() {
-  // const colorScheme = useColorScheme();
-  // const navigation = useNavigation();
-
   // State for form inputs
   const [minutes, setMinutes] = useState("");
   const [seconds, setSeconds] = useState("");
@@ -67,6 +64,7 @@ export default function AddPerformanceScreen() {
   const [location, setLocation] = useState("");
   const [eventType, setEventType] = useState("Compétition");
   const [notes, setNotes] = useState("");
+  const [timeError, setTimeError] = useState<string | null>(null);
 
   // Animation for expanding distances
   const [expandAnim] = useState(new Animated.Value(0));
@@ -88,6 +86,15 @@ export default function AddPerformanceScreen() {
   });
 
   const handleSave = async () => {
+    // Check si inputs de temps sont saisis
+    if (!minutes || !seconds || !centiseconds) {
+      setTimeError("Vous n'avez pas saisi de temps.");
+      console.error("Vous n'avez pas saisi de temps");
+      return;
+    } else {
+      setTimeError(null);
+    }
+
     // Create performance object
     const performance = {
       time: {
@@ -102,17 +109,17 @@ export default function AddPerformanceScreen() {
       location,
       eventType,
       notes,
-      createdAt: new Date(), // Ajouter un timestamp de création
-      // Vous pourriez également vouloir lier la performance à un utilisateur authentifié ici
-      // userId: auth.currentUser?.uid, // Si vous utilisez l'authentification
+      createdAt: new Date(),
+      // Laison de la performance à un utilisateur authentifié
+      // userId: auth.currentUser?.uid,
     };
 
     try {
-      // Ajouter un nouveau document à la collection 'performances'
+      // Ajouter nouveau document à la collection 'performances'
       const docRef = await addDoc(collection(db, "performances"), performance);
       console.log("Performance enregistrée avec l'ID: ", docRef.id);
       console.log("Performance avant navigation:", performance);
-      // Naviguer vers l'écran de confirmation
+      // écran de confirmation
       router.push({
         pathname: "/performances/confirmation",
         params: { performance: JSON.stringify(performance) },
@@ -126,7 +133,7 @@ export default function AddPerformanceScreen() {
     }
   };
 
-  console.log("Performance sauvée :", performance);
+  console.log("états de performance :", performance);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -190,6 +197,7 @@ export default function AddPerformanceScreen() {
                 />
               </View>
             </View>
+            {timeError && <Text style={styles.errorText}>{timeError}</Text>}
           </View>
 
           {/* Pool Length Selection */}
@@ -566,7 +574,7 @@ export default function AddPerformanceScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* Navigation is handled by the TabLayout in _layout.tsx */}
+      {/* La navigation est gérée par TabLayout dans _layout.tsx */}
     </SafeAreaView>
   );
 }
@@ -758,5 +766,10 @@ const styles = StyleSheet.create({
   },
   bottomSpace: {
     height: 50, // Adjust as needed for bottom navigation bar
+  },
+  errorText: {
+    color: "red",
+    marginTop: 5,
+    marginLeft: 10,
   },
 });
