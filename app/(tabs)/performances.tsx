@@ -57,8 +57,15 @@ export default function PerformancesScreen() {
       const querySnapshot = await getDocs(collection(db, "performances"));
       const data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
+        ...(doc.data() as { date: string; [key: string]: any }),
       }));
+      // Tri des performances par date
+      const sortedData = data.sort((a, b) => {
+        // Convertir les dates en format timestamp pour la comparaison
+        const dateA = new Date(a.date.split("/").reverse().join("-"));
+        const dateB = new Date(b.date.split("/").reverse().join("-"));
+        return dateB.getTime() - dateA.getTime(); // Ordre décroissant (du plus récent au plus ancien)
+      });
       setPerformances(data);
     } catch (error) {
       console.error("Erreur lors de la récupération des performances :", error);

@@ -13,6 +13,8 @@ import {
   Animated,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { router, useRootNavigationState } from "expo-router";
 // import  from @/models/performance;
 import { db } from "@/firebase/config";
@@ -61,6 +63,8 @@ export default function AddPerformanceScreen() {
   const [distance, setDistance] = useState("25");
   const [showLongDistances, setShowLongDistances] = useState(false);
   const [date, setDate] = useState(new Date().toLocaleDateString());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [location, setLocation] = useState("");
   const [eventType, setEventType] = useState("Compétition");
   const [notes, setNotes] = useState("");
@@ -160,41 +164,72 @@ export default function AddPerformanceScreen() {
         >
           {/* Time Input */}
           <View style={styles.formSection}>
-            <View style={styles.timeInputContainer}>
-              <View style={styles.timeInput}>
-                <Text style={styles.timeInputLabel}>minutes</Text>
-                <TextInput
-                  style={styles.timeInputField}
-                  placeholder="00"
-                  keyboardType="number-pad"
-                  maxLength={2}
-                  value={minutes}
-                  onChangeText={setMinutes}
-                />
+            <Text style={styles.label}>Temps</Text>
+            <View style={styles.timePickerContainer}>
+              {/* Minutes */}
+              <View style={styles.pickerWrapper}>
+                <Text style={styles.pickerLabel}>Minutes</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={minutes}
+                    onValueChange={(value) => setMinutes(value)}
+                    style={styles.modernPicker}
+                    itemStyle={{ height: 110 }}
+                  >
+                    {Array.from({ length: 60 }, (_, i) => (
+                      <Picker.Item
+                        key={i}
+                        label={i.toString().padStart(2, "0")}
+                        value={i.toString()}
+                        color="black"
+                      />
+                    ))}
+                  </Picker>
+                </View>
               </View>
-              <Text style={styles.timeSeparator}>:</Text>
-              <View style={styles.timeInput}>
-                <Text style={styles.timeInputLabel}>secondes</Text>
-                <TextInput
-                  style={styles.timeInputField}
-                  placeholder="00"
-                  keyboardType="number-pad"
-                  maxLength={2}
-                  value={seconds}
-                  onChangeText={setSeconds}
-                />
+
+              {/* Secondes */}
+              <View style={styles.pickerWrapper}>
+                <Text style={styles.pickerLabel}>Secondes</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={seconds}
+                    onValueChange={(value) => setSeconds(value)}
+                    style={styles.modernPicker}
+                    itemStyle={{ height: 110 }}
+                  >
+                    {Array.from({ length: 60 }, (_, i) => (
+                      <Picker.Item
+                        key={i}
+                        label={i.toString().padStart(2, "0")}
+                        value={i.toString()}
+                        color="#0D3C5F"
+                      />
+                    ))}
+                  </Picker>
+                </View>
               </View>
-              <Text style={styles.timeSeparator}>:</Text>
-              <View style={styles.timeInput}>
-                <Text style={styles.timeInputLabel}>centièmes</Text>
-                <TextInput
-                  style={styles.timeInputField}
-                  placeholder="00"
-                  keyboardType="number-pad"
-                  maxLength={2}
-                  value={centiseconds}
-                  onChangeText={setCentiseconds}
-                />
+
+              {/* Centièmes */}
+              <View style={styles.pickerWrapper}>
+                <Text style={styles.pickerLabel}>Centisecondes</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={centiseconds}
+                    onValueChange={(value) => setCentiseconds(value)}
+                    style={styles.modernPicker}
+                    itemStyle={{ height: 110 }}
+                  >
+                    {Array.from({ length: 60 }, (_, i) => (
+                      <Picker.Item
+                        key={i}
+                        label={i.toString().padStart(2, "0")}
+                        value={i.toString()}
+                        color="#0D3C5F"
+                      />
+                    ))}
+                  </Picker>
+                </View>
               </View>
             </View>
             {timeError && <Text style={styles.errorText}>{timeError}</Text>}
@@ -486,17 +521,63 @@ export default function AddPerformanceScreen() {
             </Animated.View>
           </View>
 
-          {/* Date Selection - No label */}
+          {/* Date Selection */}
           <View style={styles.formSection}>
-            <TouchableOpacity style={styles.datePickerButton}>
+            <TouchableOpacity
+              style={styles.datePickerButton}
+              onPress={() => setShowDatePicker(true)}
+            >
               <Text style={styles.datePickerText}>{date}</Text>
               <SvgXml
                 xml={calendarIconSvg}
                 width={20}
                 height={20}
-                color="#4A5568"
+                color="#000"
               />
             </TouchableOpacity>
+
+            {showDatePicker && Platform.OS === "ios" && (
+              <View style={styles.datePickerContainer}>
+                <DateTimePicker
+                  value={selectedDate}
+                  mode="date"
+                  display="spinner"
+                  textColor="#000"
+                  onChange={(event, selected) => {
+                    if (selected) {
+                      setSelectedDate(selected);
+                      setDate(selected.toLocaleDateString("fr-FR"));
+                    }
+                  }}
+                  locale="fr-FR"
+                  maximumDate={new Date()}
+                />
+                <TouchableOpacity
+                  style={styles.datePickerValidateButton}
+                  onPress={() => setShowDatePicker(false)}
+                >
+                  <Text style={styles.datePickerValidateText}>Valider</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {showDatePicker && Platform.OS === "android" && (
+              <DateTimePicker
+                value={selectedDate}
+                mode="date"
+                display="default"
+                textColor="#000"
+                onChange={(event, selected) => {
+                  setShowDatePicker(false);
+                  if (selected) {
+                    setSelectedDate(selected);
+                    setDate(selected.toLocaleDateString("fr-FR"));
+                  }
+                }}
+                locale="fr-FR"
+                maximumDate={new Date()}
+              />
+            )}
           </View>
 
           {/* Location Input - No label */}
@@ -504,6 +585,7 @@ export default function AddPerformanceScreen() {
             <TextInput
               style={styles.textInput}
               placeholder="[Lieu de la compétition]"
+              placeholderTextColor={"#808080"}
               value={location}
               onChangeText={setLocation}
             />
@@ -558,6 +640,7 @@ export default function AddPerformanceScreen() {
                 placeholder="[Zone de texte]"
                 multiline={true}
                 numberOfLines={4}
+                placeholderTextColor={"#808080"}
                 value={notes}
                 onChangeText={setNotes}
               />
@@ -725,9 +808,14 @@ const styles = StyleSheet.create({
   datePickerText: {
     fontSize: 16,
   },
+  datePicker: {
+    color: "#000",
+  },
   textInput: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    color: "#808080",
+
+    borderColor: "#aaa",
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 12,
@@ -771,5 +859,75 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 5,
     marginLeft: 10,
+  },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#fff",
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  timePickerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  picker: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    color: "red",
+    backgroundColor: "#fff",
+  },
+  pickerContainer: {
+    borderRadius: 12,
+    backgroundColor: "#F5F5F5",
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+  },
+  modernPicker: {
+    backgroundColor: "transparent",
+  },
+  pickerWrapper: {
+    width: "30%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  pickerLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#666",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  datePickerContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    marginTop: 10,
+  },
+  datePickerValidateButton: {
+    backgroundColor: "#0D3C5F",
+    padding: 15,
+    alignItems: "center",
+  },
+  datePickerValidateText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
